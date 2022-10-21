@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# -----------------------------------------------------------------------------
+set -euo pipefail # Stop running the script on first error...
+# -----------------------------------------------------------------------------
+# Connect to the VM
+./virtctl vnc iso-win10
