@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+# -----------------------------------------------------------------------------
+set -euo pipefail # Stop running the script on first error...
+# -----------------------------------------------------------------------------
+# Install Container Data Importer
+kubectl apply -f https://github.com/kubevirt/containerized-data-importer/releases/download/v1.48.1/cdi-operator.yaml
+kubectl apply -f https://github.com/kubevirt/containerized-data-importer/releases/download/v1.48.1/cdi-cr.yaml
+kubectl get cdi cdi -n cdi
+kubectl get pods -n cdi

@@ -2,7 +2,7 @@
 # -----------------------------------------------------------------------------
 set -euo pipefail # Stop running the script on first error...
 # -----------------------------------------------------------------------------
-# Install kubectl plugin
+# Install kubectl plugin manager 'krew'
 (
     set -x; cd "$(mktemp -d)" &&
     OS="$(uname | tr '[:upper:]' '[:lower:]')" &&
@@ -12,4 +12,6 @@ set -euo pipefail # Stop running the script on first error...
     tar zxvf "${KREW}.tar.gz" && ./"${KREW}" install krew
 )
 echo 'export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"' >> ~/.zshrc && bash --login
+
+# Install KubeVirt
 kubectl krew install virt

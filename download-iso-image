@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+# -----------------------------------------------------------------------------
+set -euo pipefail # Stop running the script on first error...
+# -----------------------------------------------------------------------------
+# Download the Windows ISO image
+DOWNLOAD_DIR="./dist"
+DOWNLOAD_URL="https://go.microsoft.com/fwlink/p/?LinkID=2195443&clcid=0x409&culture=en-us&country=US"
+
+mkdir -p $DOWNLOAD_DIR
+curl -L -C - -o "$DOWNLOAD_DIR/win.iso" $DOWNLOAD_URL
