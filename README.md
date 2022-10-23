@@ -4,13 +4,19 @@ This POC was inspired by these online resources:
  - https://medium.com/adessoturkey/create-a-windows-vm-in-kubernetes-using-kubevirt-b5f54fb10ffd
  - https://youtu.be/oO8VEmpojz0 
 
-# Use Kind
+# Use Kind or Minikube
 
 I had to use Kind, as my local docker-desktop did not work on the mac.
 
 You can install a kind cluster like this:
 
-```
+```bash
+# Using minikube
+brew install minikube
+minikube start
+minikube dashboard
+
+# Using Kind
 brew install kind
 kind create cluster 
 ```
@@ -28,7 +34,7 @@ In order to run a VM, we will first have to pull a VM base image and install the
 
 # Download the client CLI to load it and sample ISO image
 ./scripts/download-kubevirt-cli
-./scripts/download-iso-image  
+./scripts/download-iso-image
 
 # Upload the downloaded ISO image into the cluster
 ./scripts/expose-upload-proxy
@@ -37,6 +43,9 @@ In order to run a VM, we will first have to pull a VM base image and install the
 # Create, start and connect to the VM
 ./scripts/create-vm
 ./scripts/connect-vm
+
+# Install a virtual VM viewer in a browser
+./scripts/install-virtvnc
 ```
 
 ## Connect to the VM via a web browser

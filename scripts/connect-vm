@@ -2,7 +2,7 @@
 # -----------------------------------------------------------------------------
 set -euo pipefail # Stop running the script on first error...
 # -----------------------------------------------------------------------------
-K8S_MANIFESTS="./k8s/testvm.yaml"
+K8S_MANIFESTS="./k8s/vms/testvm.yaml"
 K8S_VM_NAME=$(cat $K8S_MANIFESTS | yq -e '.metadata.name')
 
 # Connect to the VM
