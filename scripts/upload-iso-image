@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+# -----------------------------------------------------------------------------
+set -euo pipefail # Stop running the script on first error...
+# -----------------------------------------------------------------------------
+# Upload the Windows ISO image to KubeVirt
+DOWNLOAD_DIR="./dist"
+DOWNLOAD_URL="https://go.microsoft.com/fwlink/p/?LinkID=2195443&clcid=0x409&culture=en-us&country=US"
+UPLOAD_PROXY="https://localhost:31001"
+
+VIRTCTL=virtctl
+if ! which $VIRTCTL && [ -f ./bin/virtctl ]
+then
+    VIRTCTL=./bin/virtctl    
+fi
+
+$VIRTCTL image-upload \
+--image-path="$DOWNLOAD_DIR/win.iso" \
+--pvc-name="iso-win10" \
+--uploadproxy-url=$UPLOAD_PROXY \
+--access-mode=ReadWriteOnce \
+--pvc-size=7G \
+--insecure \
+--wait-secs=60
+

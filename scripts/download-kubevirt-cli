@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# -----------------------------------------------------------------------------
+set -euo pipefail # Stop running the script on first error...
+# -----------------------------------------------------------------------------
+CLI_PATH="./bin/virtctl"
+if [ ! -f $CLI_PATH ]
+then
+    VERSION=$(kubectl get kubevirt.kubevirt.io/kubevirt -n kubevirt -o=jsonpath="{.status.observedKubeVirtVersion}")
+    ARCH=$(uname -s | tr A-Z a-z)-$(uname -m | sed 's/x86_64/amd64/') || windows-amd64.exe
+    echo "Installing: ${ARCH} - ${VERSION}"
+
+    # Install KubeVirt CLI
+    mkdir -p $(dirname $CLI_PATH)
+    curl -sL -o $CLI_PATH https://github.com/kubevirt/kubevirt/releases/download/${VERSION}/virtctl-${VERSION}-${ARCH}
+    chmod +x $CLI_PATH
+fi

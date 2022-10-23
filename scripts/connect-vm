@@ -2,9 +2,9 @@
 # -----------------------------------------------------------------------------
 set -euo pipefail # Stop running the script on first error...
 # -----------------------------------------------------------------------------
-# Download the Windows ISO image
-DOWNLOAD_DIR="./dist"
-DOWNLOAD_URL="https://go.microsoft.com/fwlink/p/?LinkID=2195443&clcid=0x409&culture=en-us&country=US"
+K8S_MANIFESTS="./k8s/testvm.yaml"
+K8S_VM_NAME=$(cat $K8S_MANIFESTS | yq -e '.metadata.name')
 
-mkdir -p $DOWNLOAD_DIR
-curl -L -C - -o "$DOWNLOAD_DIR/win.iso" $DOWNLOAD_URL
+# Connect to the VM
+echo "Connecting to VM: $K8S_VM_NAME..."
+./bin/virtctl vnc ${K8S_VM_NAME}

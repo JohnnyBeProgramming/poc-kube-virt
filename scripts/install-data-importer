@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# -----------------------------------------------------------------------------
+set -euo pipefail # Stop running the script on first error...
+# -----------------------------------------------------------------------------
+# Install Container Data Importer
+CDI_VERSION=v1.48.1
+kubectl apply -f https://github.com/kubevirt/containerized-data-importer/releases/download/$CDI_VERSION/cdi-operator.yaml
+kubectl apply -f https://github.com/kubevirt/containerized-data-importer/releases/download/$CDI_VERSION/cdi-cr.yaml
+
+kubectl get cdi cdi -n cdi
+while [ "Deploying" = "$(kubectl get cdi.cdi.kubevirt.io/cdi -n cdi -o=jsonpath='{.status.phase}')" ]
+do
+    printf "."
+    sleep 1
+done
+kubectl get pods -n cdi

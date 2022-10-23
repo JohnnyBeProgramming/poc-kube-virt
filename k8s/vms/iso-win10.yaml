@@ -1,26 +1,3 @@
-#!/usr/bin/env bash
-# -----------------------------------------------------------------------------
-set -euo pipefail # Stop running the script on first error...
-# -----------------------------------------------------------------------------
-# Create a new VM using the ISO image we uploaded
-IMAGE_NAME="quay.io/kubevirt/virtio-container-disk"
-
-# Pull the required VM runner image locally
-docker pull $IMAGE_NAME
-
-# Declare the new VM instance using the uploaded OS image
-kubectl apply -f - <<EOF
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: winhd
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 35Gi
----
 apiVersion: kubevirt.io/v1
 kind: VirtualMachine
 metadata:
@@ -64,8 +41,16 @@ spec:
       - containerDisk:
           image: quay.io/kubevirt/virtio-container-disk
         name: virtiocontainerdisk
-EOF
 
-# Start the new VM
-./virtctl start iso-win10
-kubectl get vm,vmi
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: winhd
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 35Gi

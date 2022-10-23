@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+# -----------------------------------------------------------------------------
+set -euo pipefail # Stop running the script on first error...
+# -----------------------------------------------------------------------------
+export VERSION=$(curl -s https://api.github.com/repos/kubevirt/kubevirt/releases | grep tag_name | grep -v -- '-rc' | sort -r | head -1 | awk -F': ' '{print $2}' | sed 's/,//' | xargs)
+
+echo "Installing KubeVirt v$VERSION..."
+
+# Install the kubevirt operator
+kubectl apply -f https://github.com/kubevirt/kubevirt/releases/download/$VERSION/kubevirt-operator.yaml
+
+# Install the 'kubevirt' resources and enable software emulation
+kubectl apply -n kubevirt -f https://github.com/kubevirt/kubevirt/releases/download/$VERSION/kubevirt-cr.yaml
+kubectl get pods -n kubevirt
+while [ "Deploying" = "$(kubectl get kubevirt.kubevirt.io/kubevirt -n kubevirt -o=jsonpath='{.status.phase}')" ]
+do
+    printf "."
+    sleep 1
+done
+
+# Past attempts to get docker for mac working...
+
+#kubectl -n kubevirt patch kubevirt kubevirt --type=merge --patch '{"spec":{"configuration":{"developerConfiguration":{"useEmulation":true}}}}'
+
+# Enable software emulation in a config
+#kubectl create configmap kubevirt-config -n kubevirt --from-literal debug-useEmulation=true --dry-run=client -o yaml \
+#| kubectl apply -f -
+
+#kubectl apply -f https://raw.githubusercontent.com/kubevirt/kubevirt.github.io/master/labs/manifests/vm.yaml

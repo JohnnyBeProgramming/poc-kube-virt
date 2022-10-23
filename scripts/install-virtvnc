@@ -3,9 +3,13 @@
 set -euo pipefail # Stop running the script on first error...
 # -----------------------------------------------------------------------------
 # Install Virtual VNC
-VNC_CRD="virtvnc.yaml"
+VNC_CRD="./k8s/virtvnc.yaml"
 VNC_URL="https://github.com/wavezhang/virtVNC/raw/master/k8s/virtvnc.yaml"
 
-curl -L -C - -o $VNC_CRD $VNC_URL
-sed -i 's/targetPort\: 8001/targetPort\: 8001\n    nodePort\: 31002/' $VNC_CRD
+if [ ! -f $VNC_CRD ]
+then
+    curl -L -C - -o $VNC_CRD $VNC_URL
+    sed -i 's/targetPort\: 8001/targetPort\: 8001\n    nodePort\: 31002/' $VNC_CRD
+fi
+
 kubectl apply -f $VNC_CRD

@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+# -----------------------------------------------------------------------------
+set -euo pipefail # Stop running the script on first error...
+# -----------------------------------------------------------------------------
+# Create a new VM using the ISO image we uploaded
+K8S_MANIFESTS="./k8s/testvm.yaml"
+K8S_VM_NAME=$(cat $K8S_MANIFESTS | yq -e '.metadata.name')
+IMAGE_NAME="quay.io/kubevirt/virtio-container-disk"
+
+# Pull the required VM runner image locally
+docker pull $IMAGE_NAME
+
+# Install the sample VM
+kubectl apply -f $K8S_MANIFESTS
+kubectl get vm,vmi
+
+# Start the new VM
+echo "Starting: $K8S_VM_NAME..."
+./bin/virtctl start $K8S_VM_NAME
+
+while [ "Started" = "$(kubectl get virtualmachine.kubevirt.io/testvm -o=jsonpath='{.status.printableStatus}')" ]
+do
+    printf "."
+    sleep 1
+done
